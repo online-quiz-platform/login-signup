@@ -11,6 +11,7 @@ const publicPath = path.join(__dirname, '../public')
 app.use(express.json());
 app.set("view engine","hbs");
 app.set("views",tempelatePath);
+app.use(express.static(publicPath))
 app.use(express.urlencoded({extended:false}))
 
 
@@ -49,7 +50,10 @@ app.post('/signup', async (req, res) => {
         
        
         if(data.password!=data.confirmPassword){
-            res.send("password does not match")
+            // res.send("password does not match")
+            res.status(201).render("home", {
+                naming: "password does not match"
+                })
         }
         else{
             await collection.insertMany([data])
@@ -62,7 +66,9 @@ app.post('/signup', async (req, res) => {
         
     }
     else{
-        res.send("user details already exists")
+        res.status(201).render("home", {
+            naming: "User details already existed"
+            })
      }
      
 
@@ -99,7 +105,9 @@ app.post('/login', async (req, res) => {
         }
 
         else {
-            res.send("incorrect password")
+            res.status(201).render("home", {
+                naming: " Incorrect password"
+                })
         }
 
 
@@ -107,13 +115,18 @@ app.post('/login', async (req, res) => {
     
     catch{
 
-        res.send("account does not exist")
+        res.status(201).render("home", {
+            naming: "Account does not exist"
+            })
         
 
     }
 
 
 }) 
+
+
+
 
 app.listen(port, () => {
     console.log('port connected');
